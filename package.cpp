@@ -6,6 +6,6 @@ void Package::display(){
         cout << "Country: " << country << endl;
         cout << "Destination: " << destination << endl;
         cout << "Price: " << price << endl;
-        cout << "Duration: " << duration<< endl;
+        cout << "Duration: " << duration << endl;
         cout << "Trip Type: " << tripType << endl;
 }
