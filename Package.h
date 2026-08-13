@@ -14,9 +14,7 @@ class Package {
     int duration;
     string tripType;       //Beach/Mountain/Nature/Historic
  
-    void display(){
-        
-    }
+    void display();
   
 };
 #endif
