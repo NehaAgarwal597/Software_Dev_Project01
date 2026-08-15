@@ -1,0 +1,3 @@
+101,Domestic,bangladesh,rajshahi,4000,2,days
+101,international,scotland,edinburg,40000,5,nature
+102,domestic,bangladesh,bogura,1000,2,historical

@@ -15,6 +15,6 @@ class Package {
     string tripType;       //Beach/Mountain/Nature/Historic
  
     void display();
-  
+    void saveToFile();
 };
 #endif
