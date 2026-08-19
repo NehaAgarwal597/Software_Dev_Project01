@@ -16,5 +16,6 @@ class Package {
  
     void display();
     void saveToFile();
+    void loadFromLine(string Line);
 };
 #endif

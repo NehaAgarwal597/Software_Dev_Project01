@@ -1,5 +1,6 @@
 #include "Package.h"
 #include <fstream>
+#include <sstream>
 
 void Package::display(){
     cout << "Package ID: " << id << endl;
@@ -17,4 +18,21 @@ void Package::saveToFile() {
          << destination << "," << price << ","
          << duration << "," << tripType << endl;
     fout.close();
+}
+
+void Package::loadFromLine(string line) {
+    stringstream ss(line);
+    string idStr, priceStr, durationStr;
+
+    getline(ss, idStr, ',');
+    getline(ss, type, ',');
+    getline(ss, country, ',');
+    getline(ss, destination, ',');
+    getline(ss, priceStr, ',');
+    getline(ss, durationStr, ',');
+    getline(ss, tripType, ',');
+
+    id = stoi(idStr);
+    price = stod(priceStr);
+    duration = stoi(durationStr);
 }
