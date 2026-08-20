@@ -34,7 +34,8 @@ int main()
                 cout << " ----- Admin Menu ----- " << endl; // Admin Menu
                 cout << "1. Add Trip Packages" << endl;
                 cout << "2. View Trip Package" << endl;
-                cout << "3. Back to Main Menu" << endl;
+                cout << "3. Search Package" << endl;
+                cout << "4. Back to Main Menu" << endl;
                 cout << endl;
                 cout << "Enter your choice: ";
 
@@ -44,7 +45,8 @@ int main()
                 switch (adminChoice)
                 {
                 case 1:
-                { // Add Package
+                {
+                    // Add Package
                     Package p;
                     cout << endl;
                     cout << " ------ Add New Package ------ " << endl;
@@ -120,6 +122,37 @@ int main()
                         cout << "-----------------------" << endl;
                     }
                     fin.close();
+                    break;
+                }
+                case 3:
+                {
+                    int searchId;
+                    cout << "Enter Package ID to search: ";
+                    cin >> searchId;
+                    cout << endl;
+                    ifstream fin("data/packages.txt");
+                    string line;
+                    bool found = false;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+
+                        Package p;
+                        p.loadFromLine(line);
+                        if (p.id == searchId)
+                        {
+                            p.display();
+                            found = true;
+                            break;
+                        }
+                    }
+                    fin.close();
+
+                    if (!found)
+                    {
+                        cout << "Package not found." << endl;
+                    }
                     break;
                 }
                 }
