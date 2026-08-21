@@ -390,7 +390,7 @@ int main()
                 }
                 case 3:
                 {
-                    // My Trip
+                    // My Trips
                     cout << endl;
                     ifstream fin("data/bookings.txt");
                     string line;
