@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstdio>
 #include "Package.h"
 #include "User.h"
 
@@ -35,7 +36,9 @@ int main()
                 cout << "1. Add Trip Packages" << endl;
                 cout << "2. View Trip Package" << endl;
                 cout << "3. Search Package" << endl;
-                cout << "4. Back to Main Menu" << endl;
+                cout << "4. Update Package" << endl;
+                cout << "5. Delete Package" << endl;
+                cout << "6. Back to Main Menu" << endl;
                 cout << endl;
                 cout << "Enter your choice: ";
 
@@ -125,10 +128,10 @@ int main()
                     break;
                 }
                 case 3:
-                {
-                    int searchId;
-                    cout << "Enter Package ID to search: ";
-                    cin >> searchId;
+                { // Search Package
+                    int searchName;
+                    cout << "Enter Destination Name to search: ";
+                    cin >> searchName;
                     cout << endl;
                     ifstream fin("data/packages.txt");
                     string line;
@@ -140,7 +143,7 @@ int main()
 
                         Package p;
                         p.loadFromLine(line);
-                        if (p.id == searchId)
+                        if (p.id == searchName)
                         {
                             p.display();
                             found = true;
@@ -154,6 +157,114 @@ int main()
                         cout << "Package not found." << endl;
                     }
                     break;
+                }
+                case 4:
+                { // Update Package
+                    int updateId;
+                    cout << "Enter Package ID to update: ";
+                    cin >> updateId;
+
+                    ifstream fin("data/packages.txt");
+                    string line;
+
+                    ofstream fout("data/temp.txt");
+
+                    bool updated = false;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+
+                        Package p;
+                        p.loadFromLine(line);
+                        if (p.id == updateId)
+                        {
+                            cout << "Enter New Type (Domestic/International): ";
+                            cin >> p.type;
+                            cin.ignore();
+
+                            cout << "Enter New Country: ";
+                            getline(cin, p.country); // takes full line including space
+
+                            cout << "Enter New Destination: ";
+                            getline(cin, p.destination);
+
+                            cout << "Enter New Price: ";
+                            cin >> p.price;
+                            cin.ignore();
+
+                            cout << "Enter New Duration(days): ";
+                            cin >> p.duration;
+                            cin.ignore();
+
+                            cout << "Enter New Trip Type: ";
+                            getline(cin, p.tripType);
+
+                            updated = true;
+                        }
+                        fout << p.id << "," << p.type << "," << p.country << ","
+                             << p.destination << "," << p.price << ","
+                             << p.duration << "," << p.tripType << endl;
+                    }
+                    fin.close();
+                    fout.close();
+
+                    remove("data/packages.txt");
+                    rename("data/temp.txt", "data/packages.txt");
+
+                    if (updated)
+                    {
+                        cout << "Package Updated Successfully!" << endl;
+                    }
+                    else
+                    {
+                        cout << "Package ID not found!" << endl;
+                    }
+                    break;
+                }
+                case 5: {
+                    // Delete Package
+                    int deleteId;
+                    cout << "Enter Package ID to delete: ";
+                    cin >> deleteId;
+
+                    ifstream fin("data/packages.txt");
+                    string line;
+
+                    ofstream fout("data/temp.txt");
+
+                    bool deleted = false;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())  continue;
+
+                        Package p;
+                        p.loadFromLine(line);
+                        if (p.id == deleteId)
+                        {
+                            deleted = true;
+                            continue;
+                        }
+                        fout << p.id << "," << p.type << "," << p.country << ","
+                             << p.destination << "," << p.price << ","
+                             << p.duration << "," << p.tripType << endl;
+                    }
+                    fin.close();
+                    fout.close();
+
+                    remove("data/packages.txt");
+                    rename("data/temp.txt", "data/packages.txt");
+
+                    if (deleted)
+                    {
+                        cout << "Package Deleted Successfully!" << endl;
+                    }
+                    else
+                    {
+                        cout << "Package ID not found!" << endl;
+                    }
+                    break;
+
                 }
                 }
             }

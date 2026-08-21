@@ -1,4 +1,2 @@
-
 101,Domestic,Bangladesh,Cox's Bazar,8500,3,Family
-102,Domestic,Bangladesh,Sylhet,5000,2,Solo
-103,International,Italy,Venice,377745,7,Couple
+102,Domestic,Bangladesh,Sajek Valley,4500,3,Friends
