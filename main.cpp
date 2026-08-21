@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "Package.h"
 #include "User.h"
+#include "Booking.h"
 
 using namespace std;
 
@@ -222,7 +223,8 @@ int main()
                     }
                     break;
                 }
-                case 5: {
+                case 5:
+                {
                     // Delete Package
                     int deleteId;
                     cout << "Enter Package ID to delete: ";
@@ -236,7 +238,8 @@ int main()
                     bool deleted = false;
                     while (getline(fin, line))
                     {
-                        if (line.empty())  continue;
+                        if (line.empty())
+                            continue;
 
                         Package p;
                         p.loadFromLine(line);
@@ -264,7 +267,6 @@ int main()
                         cout << "Package ID not found!" << endl;
                     }
                     break;
-
                 }
                 }
             }
@@ -275,7 +277,7 @@ int main()
             break;
         }
         case 2:
-        { // Register
+        { // User Register
             string username;
             cout << "Enter Username: ";
             cin >> username;
@@ -288,7 +290,7 @@ int main()
             break;
         }
         case 3:
-        { // Login
+        { // User Login
             string username;
             cout << "Enter Username: ";
             cin >> username;
@@ -308,6 +310,106 @@ int main()
             if (found == true)
             {
                 cout << "Login successful" << endl;
+                cout << endl;
+                cout << " ----- User Menu ----- " << endl; // User Menu
+                cout << "1. Explore Destination" << endl;
+                cout << "2. Plan a trip" << endl;
+                cout << "3. My Trips" << endl;
+                cout << "4. Back to Main Menu" << endl;
+                cout << endl;
+                cout << "Enter your choice: ";
+
+                int userChoice;
+                cin >> userChoice;
+
+                switch (userChoice)
+                {
+                case 1:
+                {
+                    // Explore Destination or view trip package
+                    cout << endl;
+                    cout << " ------- View All Packages -------" << endl;
+
+                    ifstream fin("data/packages.txt");
+                    string line;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+                        Package p;
+                        p.loadFromLine(line);
+                        p.display();
+                        cout << "-----------------------" << endl;
+                    }
+                    fin.close();
+                    break;
+                }
+                case 2:
+                {
+                    // Plan a trip
+                    int pkgId, travelers;
+                    cout << "Enter Package ID to book: ";
+                    cin >> pkgId;
+                    cout << "Enter Number of Travelers: ";
+                    cin >> travelers;
+
+                    ifstream fin("data/packages.txt");
+                    string line;
+                    bool pkgFound = false;
+                    Package p;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+                        p.loadFromLine(line);
+                        if (p.id == pkgId)
+                        {
+                            pkgFound = true;
+                            break;
+                        }
+                    }
+                    fin.close();
+
+                    if (!pkgFound)
+                    {
+                        cout << "Package not Found!" << endl;
+                        break;
+                    }
+                    Booking b;
+                    b.bookingId = pkgId * 1000 + travelers;
+                    b.username = username;
+                    b.packageId = pkgId;
+                    b.numberOfTravelers = travelers;
+                    b.totalCost = p.price * travelers;
+                    b.bookingStatus = "Confirmed";
+                    b.saveToFile();
+
+                    cout << "Booking confirmed!\n Total Cost: " << b.totalCost << endl;
+
+                    break;
+                }
+                case 3:
+                {
+                    // My Trip
+                    cout << endl;
+                    ifstream fin("data/bookings.txt");
+                    string line;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+                        Booking b;
+                        b.loadFromLine(line);
+                        if (b.username == username)
+                        {
+                            b.display();
+                            cout << "-----------------------" << endl;
+                        }
+                    }
+                    fin.close();
+                    break;
+                }
+                }
             }
             else
             {
