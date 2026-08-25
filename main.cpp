@@ -93,7 +93,7 @@ int main()
                     cout << "Enter Destination: ";
                     getline(cin, p.destination);
 
-                    cout << "Enter Price: ";
+                    cout << "Enter Price(Per Person, BDT): ";
                     cin >> p.price;
                     cin.ignore();
 
@@ -101,7 +101,7 @@ int main()
                     cin >> p.duration;
                     cin.ignore();
 
-                    cout << "Enter Trip Type: ";
+                    cout << "Enter Trip Type(Beach/Mountain/Historical/Nature): ";
                     getline(cin, p.tripType);
 
                     p.saveToFile();
@@ -130,9 +130,11 @@ int main()
                 }
                 case 3:
                 { // Search Package
-                    int searchName;
+                    string searchName;
                     cout << "Enter Destination Name to search: ";
-                    cin >> searchName;
+                    cin.ignore();
+                    getline(cin, searchName);
+
                     cout << endl;
                     ifstream fin("data/packages.txt");
                     string line;
@@ -144,7 +146,7 @@ int main()
 
                         Package p;
                         p.loadFromLine(line);
-                        if (p.id == searchName)
+                        if (p.destination == searchName)
                         {
                             p.display();
                             found = true;
@@ -190,7 +192,7 @@ int main()
                             cout << "Enter New Destination: ";
                             getline(cin, p.destination);
 
-                            cout << "Enter New Price: ";
+                            cout << "Enter New Price(Per Person, BDT): ";
                             cin >> p.price;
                             cin.ignore();
 
@@ -198,7 +200,7 @@ int main()
                             cin >> p.duration;
                             cin.ignore();
 
-                            cout << "Enter New Trip Type: ";
+                            cout << "Enter New Trip Type(Beach/Mountain/Historical/Nature): ";
                             getline(cin, p.tripType);
 
                             updated = true;
@@ -282,11 +284,30 @@ int main()
             cout << "Enter Username: ";
             cin >> username;
 
-            User u;
-            u.username = username;
-            u.saveToFile();
-            cout << "Registered Successfully!" << endl;
+            ifstream fin("data/users.txt"); // Check if username alreay exits
+            string line;
+            bool usernameExists = false;
+            while (getline(fin, line))
+            {
+                if (line == username)
+                {
+                    usernameExists = true;
+                    break;
+                }
+            }
+            fin.close();
 
+            if (usernameExists)
+            {
+                cout << "Username already exists! Please choose another name." << endl;
+            }
+            else
+            {
+                User u;
+                u.username = username;
+                u.saveToFile();
+                cout << "Registered Successfully!" << endl;
+            }
             break;
         }
         case 3:
@@ -315,7 +336,8 @@ int main()
                 cout << "1. Explore Destination" << endl;
                 cout << "2. Plan a trip" << endl;
                 cout << "3. My Trips" << endl;
-                cout << "4. Back to Main Menu" << endl;
+                cout << "4. Cancel Booking" << endl;
+                cout << "5. Back to Main Menu" << endl;
                 cout << endl;
                 cout << "Enter your choice: ";
 
@@ -347,45 +369,73 @@ int main()
                 case 2:
                 {
                     // Plan a trip
-                    int pkgId, travelers;
-                    cout << "Enter Package ID to book: ";
-                    cin >> pkgId;
-                    cout << "Enter Number of Travelers: ";
-                    cin >> travelers;
+                    cin.ignore();
+                    string dest;
+                    cout << "Enter Destination: ";
+                    getline(cin, dest);
 
                     ifstream fin("data/packages.txt");
                     string line;
-                    bool pkgFound = false;
+                    Package found_p; // Searching destination
+                    bool destFound = false;
                     Package p;
                     while (getline(fin, line))
                     {
                         if (line.empty())
                             continue;
                         p.loadFromLine(line);
-                        if (p.id == pkgId)
+                        if (p.destination == dest)
                         {
-                            pkgFound = true;
+                            found_p = p;
+                            destFound = true;
                             break;
                         }
                     }
                     fin.close();
 
-                    if (!pkgFound)
+                    if (!destFound)
                     {
-                        cout << "Package not Found!" << endl;
+                        cout << "Destination not Found!" << endl;
                         break;
                     }
-                    Booking b;
-                    b.bookingId = pkgId * 1000 + travelers;
-                    b.username = username;
-                    b.packageId = pkgId;
-                    b.numberOfTravelers = travelers;
-                    b.totalCost = p.price * travelers;
-                    b.bookingStatus = "Confirmed";
-                    b.saveToFile();
+                    int travelers;
+                    double budget;
+                    cout << "Number of travelers: ";
+                    cin >> travelers;
+                    cout << "Enter your Budget: ";
+                    cin >> budget;
 
-                    cout << "Booking confirmed!\n Total Cost: " << b.totalCost << endl;
+                    double totalCost = found_p.price * travelers;
 
+                    if (totalCost <= budget) // Budget Check
+                    {
+                        cout << "Package fits your budget!\n Total Cost: " << totalCost << endl;
+                        ifstream countFile("data/bookings.txt");
+                        string tempLine;
+                        int count = 0;
+                        while (getline(countFile, tempLine))
+                        {
+                            if (!tempLine.empty())
+                                count++;
+                        }
+                        countFile.close();
+
+                        int newBookingId = count + 1;
+                        Booking b;
+                        b.bookingId = newBookingId;
+                        b.username = username;
+                        b.packageId = found_p.id;
+                        b.numberOfTravelers = travelers;
+                        b.totalCost = totalCost;
+                        b.bookingStatus = "Confirmed";
+                        b.saveToFile();
+
+                        cout << "Booking confirmed!\n Booking ID: " << b.bookingId << endl;
+                    }
+                    else
+                    {
+                        cout << "Budget insufficient!\n Estimate Cost: " << totalCost << ", Your Budget: " << budget << endl;
+                    }
                     break;
                 }
                 case 3:
@@ -394,6 +444,7 @@ int main()
                     cout << endl;
                     ifstream fin("data/bookings.txt");
                     string line;
+                    bool any = false;
                     while (getline(fin, line))
                     {
                         if (line.empty())
@@ -404,9 +455,52 @@ int main()
                         {
                             b.display();
                             cout << "-----------------------" << endl;
+                            any = true;
                         }
                     }
                     fin.close();
+                    if (!any)
+                        cout << "No bookings found." << endl;
+                    break;
+                }
+                case 4:
+                { // Cancel Booking
+                    int cancelId;
+                    cout << "Enter Booking ID to cancel: ";
+                    cin >> cancelId;
+
+                    ifstream fin("data/bookings.txt");
+                    ofstream fout("data/temp.txt");
+                    string line;
+                    bool cancelled = false;
+                    while (getline(fin, line))
+                    {
+                        if (line.empty())
+                            continue;
+                        Booking b;
+                        b.loadFromLine(line);
+                        if (b.bookingId == cancelId && b.username == username)
+                        {
+                            b.bookingStatus = "Cancelled";
+                            cancelled = true;
+                        }
+                        fout << b.bookingId << "," << b.username << "," << b.packageId << "," << b.numberOfTravelers << ","
+                             << b.totalCost << "," << b.bookingStatus << endl;
+                    }
+                    fin.close();
+                    fout.close();
+
+                    remove("data/bookings.txt");
+                    rename("data/temp.txt", "data/bookings.txt");
+
+                    if (cancelled)
+                    {
+                        cout << "Booking Cancelled Successfully." << endl;
+                    }
+                    else
+                    {
+                        cout << "Booking ID not found." << endl;
+                    }
                     break;
                 }
                 }
