@@ -284,7 +284,7 @@ int main()
             cout << "Enter Username: ";
             cin >> username;
 
-            ifstream fin("data/users.txt"); // Check if username alreay exits
+            ifstream fin("data/users.txt"); // Check if username already exists
             string line;
             bool usernameExists = false;
             while (getline(fin, line))
