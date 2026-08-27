@@ -1,3 +1,4 @@
 101,Domestic,Bangladesh,Cox's Bazar,5500,3,Beach
-102,Domestic,Bangladesh,Sajek Valley,4200,4,Nature
-103,Domestic,Bangladesh,Sundarban,7500,4,Nature
+102,Domestic,Bangladesh,Sajek Valley,4200,4,Mountain
+103,Domestic,Bangladesh,Sundarban,7500,3,Nature
+104,Domestic,Bangladesh,Bandarban,5000,2,Adventure

@@ -4,12 +4,12 @@
 
 void Package::display(){
     cout << "Package ID: " << id << endl;
-        cout << "Type: " << type << endl;
+        cout << "Type: " << type << endl;  // Domestic/International
         cout << "Country: " << country << endl;
         cout << "Destination: " << destination << endl;
-        cout << "Price: " << price << endl;
-        cout << "Duration: " << duration << endl;
-        cout << "Trip Type: " << tripType << endl;
+        cout << "Price(Per Person, BDT): " << price << endl;
+        cout << "Duration(days): " << duration << endl;
+        cout << "Trip Type: " << tripType << endl;    // Beach/Mountain/Historical/Nature....
 }
 
 void Package::saveToFile() {
