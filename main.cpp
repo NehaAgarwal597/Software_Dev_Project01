@@ -32,7 +32,10 @@ int main()
             if (password == "admin789")
             {
                 cout << "Admin Login Successfully" << endl;
-                cout << endl;
+
+                bool adminRunning = true;
+                while(adminRunning) {
+                    cout << endl;
                 cout << " ----- Admin Menu ----- " << endl; // Admin Menu
                 cout << "1. Add Trip Packages" << endl;
                 cout << "2. View Trip Package" << endl;
@@ -270,7 +273,11 @@ int main()
                     }
                     break;
                 }
+                case 6: // Back to Main Menu
+                    adminRunning = false;
+                    break;
                 }
+            }
             }
             else
             {
@@ -331,6 +338,10 @@ int main()
             if (found == true)
             {
                 cout << "Login successful" << endl;
+
+                bool userRunning = true;
+
+                while(userRunning) {
                 cout << endl;
                 cout << " ----- User Menu ----- " << endl; // User Menu
                 cout << "1. Explore Destination" << endl;
@@ -503,7 +514,11 @@ int main()
                     }
                     break;
                 }
+                case 5: // Back to Main Menu
+                    userRunning = false;
+                    break;
                 }
+            }
             }
             else
             {
