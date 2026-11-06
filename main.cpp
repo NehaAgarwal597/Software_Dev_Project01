@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdio>
 #include <vector>
+#include "FileHandler.h"
 #include "Package.h"
 #include "User.h"
 #include "Booking.h"
@@ -116,16 +117,12 @@ int main()
 
                         ifstream fin("data/packages.txt");
                         string line;
-                        while (getline(fin, line))
+                        vector<Package> packages = loadAllPackages();
+                        for (int i = 0; i < packages.size(); i++)
                         {
-                            if (line.empty())
-                                continue;
-                            Package p;
-                            p.loadFromLine(line);
-                            p.display();
+                            packages[i].display();
                             cout << "-----------------------" << endl;
                         }
-                        fin.close();
                         break;
                     }
                     case 3:
@@ -516,7 +513,8 @@ int main()
                         string preferredType;
                         int travelers;
 
-                        cout << "\n====== Smart Tour Recommendation ======\n" << endl;
+                        cout << "\n====== Smart Tour Recommendation ======\n"
+                             << endl;
                         cout << "Your budget: ";
                         cin >> budget;
                         cout << "Preferred trip type: ";
@@ -525,7 +523,7 @@ int main()
                         cin >> travelers;
 
                         vector<Package> allPackages;
-                        vector<double> allScores; 
+                        vector<double> allScores;
                         vector<double> allBudgetScores;
                         vector<double> allTypeScores;
 
@@ -575,13 +573,16 @@ int main()
 
                         cout << "\n------- All matches -------\n";
                         for (int i = 0; i < allPackages.size(); i++)
-                        {   
+                        {
                             double estimateCost = allPackages[i].price * travelers;
-                            cout << i + 1 << ". " << allPackages[i].destination << " Tour" 
-                            << "\n   Estimate Cost: " << estimateCost << " BDT"
-                            << "\n   Budget Fit: " << (int)allBudgetScores[i] << "%" 
-                             "\n   Trip Type Match: " << (int)allTypeScores[i] << "%" 
-                             "\n   Total Match Score: " << (int)allScores[i] << "% \n" << endl;
+                            cout << i + 1 << ". " << allPackages[i].destination << " Tour"
+                                 << "\n   Estimate Cost: " << estimateCost << " BDT"
+                                 << "\n   Budget Fit: " << (int)allBudgetScores[i] << "%"
+                                                                                      "\n   Trip Type Match: "
+                                 << (int)allTypeScores[i] << "%"
+                                                             "\n   Total Match Score: "
+                                 << (int)allScores[i] << "% \n"
+                                 << endl;
                         }
                         int best = 0; // find best match
                         for (int i = 1; i < allScores.size(); i++)

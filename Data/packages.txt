@@ -3,3 +3,4 @@
 103,Domestic,Bangladesh,Sundarban,7500,3,Nature
 104,Domestic,Bangladesh,Bandarban,5000,2,Adventure
 201,International,Scotland,Edinburgh,37500,3,Historical
+300,Domestic,USA,Los Angles,10000,10,Mountain
